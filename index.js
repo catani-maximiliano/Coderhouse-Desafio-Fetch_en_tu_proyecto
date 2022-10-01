@@ -69,6 +69,16 @@ registro.onclick = function (e) {
   Register();
 };
 
+if(usuarioConectadoJson===true){
+
+}else{
+  Swal.fire("Para continuar debe Iniciar Sesión")
+  function mostrar() {
+    // simulamos el click del mouse en el boton del formulario
+    document.getElementById("boton-ingresar").click();
+  }
+  setTimeout(mostrar, 1000);
+}
 //funciones
 function ver(mostrar) {
   let infoMostrar = "Mostrar los Platos guardados en el LocalStorage";
@@ -276,35 +286,27 @@ const contraseñaSesion = document.getElementById("contraseñaSesion").value;
 usuarioJson = JSON.parse(localStorage.getItem("usuario"));
 
 let usuarioConectado = false;
-localStorage.setItem("usuarioConectado", JSON.stringify(usuarioConectado));
-let usuarioConectadoJson = JSON.parse(localStorage.getItem("usuarioConectado"));
+sessionStorage.setItem("usuarioConectado", JSON.stringify(usuarioConectado));
+let usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
 
 function Login() {
-  console.log("login");
   if (usuarioConectadoJson === false) {
-    console.log("if login");
-    
+    //buscar si existe usuario y contraseña y pasar por variable para validarlo.
+      //validacion de mail y contraseña dentro del localstorage.
+
     for (var i = 0; i < usuarioJson.length; i++) {
-      console.log("for");
-      if (
-        usuarioJson[i].email == emailSesion &&
-        usuarioJson[i].contraseña == contraseñaSesion
-      ) {
-        console.log((usuarioExistente = usuarioJson[i].email));
+      if (usuarioJson[i].email == emailSesion && usuarioJson[i].contraseña == contraseñaSesion ) {
         return (usuarioExistente = usuarioJson[i].email);
       }
     }
-
     if (emailSesion !== usuarioExistente) {
       Swal.fire("Usuario o contraseña incorrectas");
       return;
     } else {
+      //pasar a usuario como conectado y guardarlo en el sessionStorage.
       usuarioConectado = true;
-
-      localStorage.setItem(
-        "usuarioConectado",
-        JSON.stringify(usuarioConectado)
-      );
+      sessionStorage.setItem("usuarioConectado",JSON.stringify(usuarioConectado));
+      usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
 
       //ocultar botones registro y login, y visibilizar el boton cerrar sesion.
       document.getElementById("boton-ingresar").className = "d-none";
@@ -319,8 +321,8 @@ function Login() {
       setTimeout(cerrarBoton, 1000);
     }
   }
-  //validacion de mail y contraseña dentro del localstorage.
 }
+
 //la funcion para registrar usuarios mediante localstorage
 function Register() {
   let emailReg = document.getElementById("emailRegister").value;
@@ -372,4 +374,14 @@ function Register() {
   }
 }
 
-function cerrarSesion() {}
+function CerrarSesion() {
+    //ocultar boton cerrar sesion, y visibilizar los botones login y registro.
+    document.getElementById("boton-ingresar").className = "d-inline btn btn-primary text-dark";
+    document.getElementById("boton-registrar").className = "d-inline btn btn-primary text-dark";
+    document.getElementById("boton-cerrar-sesion").className = "d-none";
+    Swal.fire("Sesión Cerrada Correctamente");
+//mediante variable desconectando el usuario
+usuarioConectado = false;
+sessionStorage.setItem("usuarioConectado",JSON.stringify(usuarioConectado));
+usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
+}
