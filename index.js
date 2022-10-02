@@ -14,7 +14,7 @@ let usuarioNuevo = [];
 const emailRegister = document.getElementById("emailRegister");
 const contraseñaRegistro = document.getElementById("contraseñaRegistro");
 const contraseñaRegistroCon = document.getElementById("contraseñaRegistroCon");
-let usuarioExistente="";
+let usuarioExistente = "";
 const regexEmail =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
@@ -27,6 +27,14 @@ let tablaContentFiltroPais;
 let tablaContentFiltroPlato;
 let ordenadosPrecio = [];
 let ordenadosProducto = [];
+
+let usuarioConectado = false;
+sessionStorage.setItem("usuarioConectado", JSON.stringify(usuarioConectado));
+let usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
+
+const emailSesion = document.getElementById("emailSesion").value;
+const contraseñaSesion = document.getElementById("contraseñaSesion").value;
+usuarioJson = JSON.parse(localStorage.getItem("usuario"));
 
 class comidas {
   constructor(nombre, ingredientes, pais, precio) {
@@ -69,16 +77,6 @@ registro.onclick = function (e) {
   Register();
 };
 
-if(usuarioConectadoJson===true){
-
-}else{
-  Swal.fire("Para continuar debe Iniciar Sesión")
-  function mostrar() {
-    // simulamos el click del mouse en el boton del formulario
-    document.getElementById("boton-ingresar").click();
-  }
-  setTimeout(mostrar, 1000);
-}
 //funciones
 function ver(mostrar) {
   let infoMostrar = "Mostrar los Platos guardados en el LocalStorage";
@@ -95,48 +93,42 @@ function ver(mostrar) {
       className: "info",
       stopOnFocus: true,
       gravity: "top",
-      position: "center",
-      style: { background: "linear-gradient(to right, #00b09b, #96c93d)" },
+      position: "right",
     }).showToast();
   } else if (mostrar == "infoOrdenarPrecio") {
     Toastify({
       text: infoOrdenarPrecio,
       className: "info",
       gravity: "top",
-      position: "center",
-      style: { background: "linear-gradient(to right, #00b09b, #96c93d)" },
+      position: "right",
     }).showToast();
   } else if (mostrar == "infoOrdenarProducto") {
     Toastify({
       text: infoOrdenarProducto,
       className: "info",
       gravity: "top",
-      position: "center",
-      style: { background: "linear-gradient(to right, #00b09b, #96c93d)" },
+      position: "right"
     }).showToast();
   } else if (mostrar == "infofiltrarPlato") {
     Toastify({
       text: infofiltrarPlato,
       className: "info",
       gravity: "top",
-      position: "center",
-      style: { background: "linear-gradient(to right, #00b09b, #96c93d)" },
+      position: "right"
     }).showToast();
   } else if (mostrar == "infofiltrarPais") {
     Toastify({
       text: infofiltrarPais,
       className: "info",
       gravity: "top",
-      position: "center",
-      style: { background: "linear-gradient(to right, #00b09b, #96c93d)" },
+      position: "right"
     }).showToast();
   } else if (mostrar == "inforesetear") {
     Toastify({
       text: inforesetear,
       className: "info",
       gravity: "top",
-      position: "center",
-      style: { background: "linear-gradient(to right, #00b09b, #96c93d)" },
+      position: "right"
     }).showToast();
   }
 }
@@ -147,53 +139,72 @@ function ingreso() {
   let pais = document.getElementById("formPais").value;
   let precio = document.getElementById("formPrecio").value;
 
-  nuevoPlato.push(new comidas(nombre, ingredientes, pais, precio));
+  if (usuarioConectadoJson === true) {
+    nuevoPlato.push(new comidas(nombre, ingredientes, pais, precio));
 
-  //guardado del plato en el localStorage.
-  localStorage.setItem("plato", JSON.stringify(nuevoPlato));
-  //en platoJson guardo el objeto del localstorage y luego la variable platoJson la utilizo para el resto de funciones.
-  platoJson = JSON.parse(localStorage.getItem("plato"));
+    //guardado del plato en el localStorage.
+    localStorage.setItem("plato", JSON.stringify(nuevoPlato));
+    //en platoJson guardo el objeto del localstorage y luego la variable platoJson la utilizo para el resto de funciones.
+    platoJson = JSON.parse(localStorage.getItem("plato"));
 
-  document.getElementById("formNombre").value = "";
-  document.getElementById("formIngredientes").value = "";
-  document.getElementById("formPais").value = "";
-  document.getElementById("formPrecio").value = "";
+    document.getElementById("formNombre").value = "";
+    document.getElementById("formIngredientes").value = "";
+    document.getElementById("formPais").value = "";
+    document.getElementById("formPrecio").value = "";
 
-  //implementacion de Tostify para el ingreso de un plato
-  Toastify({
-    text: "Se guardo Correctamente",
-    className: "info",
-    stopOnFocus: true,
-    gravity: "top",
-    position: "center",
-    style: { background: "green" },
-  }).showToast();
+    //implementacion de Tostify para el ingreso de un plato
+    Toastify({
+      text: "Se guardo Correctamente",
+      className: "info",
+      stopOnFocus: true,
+      gravity: "top",
+      position: "center",
+      style: { background: "green" },
+    }).showToast();
+  } else {
+    Swal.fire("Para continuar debe Iniciar Sesión");
+    function mostrar() {
+      // simulamos el click del mouse en el boton del formulario
+      document.getElementById("boton-ingresar").click();
+    }
+    setTimeout(mostrar, 1000);
+  }
 }
 
 function mostrarPlato() {
-  reset();
-  for (let item of platoJson) {
-    tablaContent += `
+  if (usuarioConectadoJson === true) {
+    reset();
+    for (let item of platoJson) {
+      tablaContent += `
     <tr>
       <td>${item.nombre}</td>
       <td>${item.ingredientes}</td>
       <td>${item.pais}</td>
       <td>${item.precio}</td>
-  </td>`;
+    </td>`;
+    }
+    listaPlatos.innerHTML += tablaContent;
+  } else {
+    Swal.fire("Para continuar debe Iniciar Sesión");
+    function mostrar() {
+      // simulamos el click del mouse en el boton del formulario
+      document.getElementById("boton-ingresar").click();
+    }
+    setTimeout(mostrar, 1000);
   }
-  listaPlatos.innerHTML += tablaContent;
 }
 
 function ordenPrecio() {
-  reset();
+  if (usuarioConectadoJson === true) {
+    reset();
 
-  ordenadosPrecio = platoJson.map((elemento) => elemento);
-  ordenadosPrecio.sort(function (a, b) {
-    return a.precio - b.precio;
-  });
+    ordenadosPrecio = platoJson.map((elemento) => elemento);
+    ordenadosPrecio.sort(function (a, b) {
+      return a.precio - b.precio;
+    });
 
-  for (let item1 of ordenadosPrecio) {
-    tablaContentPrecio += `
+    for (let item1 of ordenadosPrecio) {
+      tablaContentPrecio += `
       <tr>
         <td>${item1.nombre}</td>
         <td>${item1.ingredientes}</td>
@@ -201,21 +212,30 @@ function ordenPrecio() {
         <td>${item1.precio}</td>
       </td>
     `;
+    }
+    listaPlatos.innerHTML += tablaContentPrecio;
+  } else {
+    Swal.fire("Para continuar debe Iniciar Sesión");
+    function mostrar() {
+      // simulamos el click del mouse en el boton del formulario
+      document.getElementById("boton-ingresar").click();
+    }
+    setTimeout(mostrar, 1000);
   }
-  listaPlatos.innerHTML += tablaContentPrecio;
 }
 
 function ordenProducto() {
-  reset();
-  ordenadosProducto = platoJson.map((elemento) => elemento);
-  ordenadosProducto.sort(function (a, b) {
-    //funcion Optimizada
-    a.nombre > b.nombre ? 1 : -1;
-    return 0;
-  });
+  if (usuarioConectadoJson === true) {
+    reset();
+    ordenadosProducto = platoJson.map((elemento) => elemento);
+    ordenadosProducto.sort(function (a, b) {
+      //funcion Optimizada
+      a.nombre > b.nombre ? 1 : -1;
+      return 0;
+    });
 
-  for (let item1 of ordenadosProducto) {
-    tablaContentProducto += `
+    for (let item1 of ordenadosProducto) {
+      tablaContentProducto += `
       <tr>
         <td>${item1.nombre}</td>
         <td>${item1.ingredientes}</td>
@@ -223,17 +243,26 @@ function ordenProducto() {
         <td>${item1.precio}</td>
       </td>
     `;
+    }
+    listaPlatos.innerHTML += tablaContentProducto;
+  } else {
+    Swal.fire("Para continuar debe Iniciar Sesión");
+    function mostrar() {
+      // simulamos el click del mouse en el boton del formulario
+      document.getElementById("boton-ingresar").click();
+    }
+    setTimeout(mostrar, 1000);
   }
-  listaPlatos.innerHTML += tablaContentProducto;
 }
 
 function filtradoPlato() {
-  reset();
-  let platoF = prompt("ingrese el nombre del plato que quiere buscar");
-  let platoFiltrado = platoJson.filter((plato) => plato.nombre == platoF);
+  if (usuarioConectadoJson === true) {
+    reset();
+    let platoF = prompt("ingrese el nombre del plato que quiere buscar");
+    let platoFiltrado = platoJson.filter((plato) => plato.nombre == platoF);
 
-  for (let plato of platoFiltrado) {
-    tablaContentFiltroPlato += `
+    for (let plato of platoFiltrado) {
+      tablaContentFiltroPlato += `
     <tr>
       <td>${plato.nombre}</td>
       <td>${plato.ingredientes}</td>
@@ -241,17 +270,28 @@ function filtradoPlato() {
       <td>${plato.precio}</td>
     </td>
   `;
+    }
+    listaPlatos.innerHTML += tablaContentFiltroPlato;
+  } else {
+    Swal.fire("Para continuar debe Iniciar Sesión");
+    function mostrar() {
+      // simulamos el click del mouse en el boton del formulario
+      document.getElementById("boton-ingresar").click();
+    }
+    setTimeout(mostrar, 1000);
   }
-  listaPlatos.innerHTML += tablaContentFiltroPlato;
 }
 
 function filtradoPais() {
-  reset();
-  let platoA = prompt("ingrese el pais de origen del plato que quiere buscar");
-  let paisFiltrado = platoJson.filter((plato) => plato.pais == platoA);
+  if (usuarioConectadoJson === true) {
+    reset();
+    let platoA = prompt(
+      "ingrese el pais de origen del plato que quiere buscar"
+    );
+    let paisFiltrado = platoJson.filter((plato) => plato.pais == platoA);
 
-  for (let plato of paisFiltrado) {
-    tablaContentFiltroPais += `
+    for (let plato of paisFiltrado) {
+      tablaContentFiltroPais += `
     <tr>
        <td>${plato.nombre}</td>
        <td>${plato.ingredientes}</td>
@@ -259,12 +299,21 @@ function filtradoPais() {
        <td>${plato.precio}</td>
     </tr>
    `;
+    }
+    listaPlatos.innerHTML += tablaContentFiltroPais;
+  } else {
+    Swal.fire("Para continuar debe Iniciar Sesión");
+    function mostrar() {
+      // simulamos el click del mouse en el boton del formulario
+      document.getElementById("boton-ingresar").click();
+    }
+    setTimeout(mostrar, 1000);
   }
-  listaPlatos.innerHTML += tablaContentFiltroPais;
 }
 
 function reset() {
-  elemento.innerHTML = `
+  if (usuarioConectadoJson === true) {
+    elemento.innerHTML = `
   <table id="tabla" class="w-75 m-5 table table-bordered table-striped table-dark">
   <tr>
       <th>Plato</th>
@@ -274,28 +323,31 @@ function reset() {
   </tr>
   </table>`;
 
-  tablaContent = ``;
-  tablaContentPrecio = ``;
-  tablaContentProducto = ``;
-  tablaContentFiltroPais = ``;
-  tablaContentFiltroPlato = ``;
+    tablaContent = ``;
+    tablaContentPrecio = ``;
+    tablaContentProducto = ``;
+    tablaContentFiltroPais = ``;
+    tablaContentFiltroPlato = ``;
+  } else {
+    Swal.fire("Para continuar debe Iniciar Sesión");
+    function mostrar() {
+      // simulamos el click del mouse en el boton del formulario
+      document.getElementById("boton-ingresar").click();
+    }
+    setTimeout(mostrar, 1000);
+  }
 }
-
-const emailSesion = document.getElementById("emailSesion").value;
-const contraseñaSesion = document.getElementById("contraseñaSesion").value;
-usuarioJson = JSON.parse(localStorage.getItem("usuario"));
-
-let usuarioConectado = false;
-sessionStorage.setItem("usuarioConectado", JSON.stringify(usuarioConectado));
-let usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
 
 function Login() {
   if (usuarioConectadoJson === false) {
     //buscar si existe usuario y contraseña y pasar por variable para validarlo.
-      //validacion de mail y contraseña dentro del localstorage.
+    //validacion de mail y contraseña dentro del localstorage.
 
     for (var i = 0; i < usuarioJson.length; i++) {
-      if (usuarioJson[i].email == emailSesion && usuarioJson[i].contraseña == contraseñaSesion ) {
+      if (
+        usuarioJson[i].email == emailSesion &&
+        usuarioJson[i].contraseña == contraseñaSesion
+      ) {
         return (usuarioExistente = usuarioJson[i].email);
       }
     }
@@ -305,8 +357,13 @@ function Login() {
     } else {
       //pasar a usuario como conectado y guardarlo en el sessionStorage.
       usuarioConectado = true;
-      sessionStorage.setItem("usuarioConectado",JSON.stringify(usuarioConectado));
-      usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
+      sessionStorage.setItem(
+        "usuarioConectado",
+        JSON.stringify(usuarioConectado)
+      );
+      usuarioConectadoJson = JSON.parse(
+        sessionStorage.getItem("usuarioConectado")
+      );
 
       //ocultar botones registro y login, y visibilizar el boton cerrar sesion.
       document.getElementById("boton-ingresar").className = "d-none";
@@ -322,7 +379,6 @@ function Login() {
     }
   }
 }
-
 //la funcion para registrar usuarios mediante localstorage
 function Register() {
   let emailReg = document.getElementById("emailRegister").value;
@@ -375,13 +431,15 @@ function Register() {
 }
 
 function CerrarSesion() {
-    //ocultar boton cerrar sesion, y visibilizar los botones login y registro.
-    document.getElementById("boton-ingresar").className = "d-inline btn btn-primary text-dark";
-    document.getElementById("boton-registrar").className = "d-inline btn btn-primary text-dark";
-    document.getElementById("boton-cerrar-sesion").className = "d-none";
-    Swal.fire("Sesión Cerrada Correctamente");
-//mediante variable desconectando el usuario
-usuarioConectado = false;
-sessionStorage.setItem("usuarioConectado",JSON.stringify(usuarioConectado));
-usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
+  //ocultar boton cerrar sesion, y visibilizar los botones login y registro.
+  document.getElementById("boton-ingresar").className =
+    "d-inline btn btn-primary text-dark";
+  document.getElementById("boton-registrar").className =
+    "d-inline btn btn-primary text-dark";
+  document.getElementById("boton-cerrar-sesion").className = "d-none";
+  Swal.fire("Sesión Cerrada Correctamente");
+  //mediante variable desconectando el usuario
+  usuarioConectado = false;
+  sessionStorage.setItem("usuarioConectado", JSON.stringify(usuarioConectado));
+  usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
 }
