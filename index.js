@@ -30,7 +30,9 @@ let ordenadosProducto = [];
 
 let usuarioConectado = false;
 sessionStorage.setItem("usuarioConectado", JSON.stringify(usuarioConectado));
-let usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
+let usuarioConectadoJson = JSON.parse(
+  sessionStorage.getItem("usuarioConectado")
+);
 
 const emailSesion = document.getElementById("emailSesion").value;
 const contraseñaSesion = document.getElementById("contraseñaSesion").value;
@@ -77,6 +79,116 @@ registro.onclick = function (e) {
   Register();
 };
 
+/* api de marvel
+const marvel={
+  render: () => {
+    const urlAPI='https://gateway.marvel.com:443/v1/public/characters?ts=1&apikey=83eaf95d88f5e5719aa60d9b4f0c95a8&hash=3a6d9f99d0f9be229c93321256b5f322';
+    const container = document.querySelector("contenedor");
+    let contentHTML='';
+
+    fetch(urlAPI)
+    .then(res =>res.json())
+    .then((json)=>{
+      console.log(json, 'RES.JSON');
+
+
+ for (const hero of json.data.results) {
+  console.log( hero.name );
+        let urlHero = hero.urls[0].url
+        document.getElementById("contenedor").innerHTML +=`
+        <div class="col-md-4">
+        <a href="${urlHero}" target="_blank">
+          <img src="${hero.thumbnail.path}.${hero.thumbnail.extension}" alt="${hero.name}"class="img-thumbnail">
+        </a>
+        <h3 class="title">${hero.name}</h3>
+      </div>
+        `;
+      }
+    })
+  }
+};
+marvel.render();*/
+
+async function apiRespuesta() {
+  let app_id = "5d3a5e8f";
+  let app_key = "61c7b7bd4ec183a6f7c871979335e3dd";
+  let buscadorReceta=document.getElementById("buscadorReceta").value;
+  let urlAPI = `https://api.edamam.com/api/recipes/v2?type=public&q=${buscadorReceta}&app_id=${app_id}&app_key=%20${app_key}`;
+  let response = await fetch(urlAPI);
+  let data = await response.json();
+ console.log(data.hits);
+
+ document.getElementById("contenedor").innerHTML ="";
+  for (const receta of data.hits) {
+    let health=[];
+    let l=receta.recipe.healthLabels.length;
+    let punto='&#9679';
+
+    for (let index = 0 ; index < l; index++) {
+      health.push(receta.recipe.healthLabels[index]+"  ");
+    }
+   health= health.toString();
+   health= health.replace(/,/g, punto);
+
+
+    document.getElementById("contenedor").innerHTML += `
+    <div class="col-md-8 mx-auto my-1 rounded" id="recetas">
+    <div class="card  box-shadow">
+      <div class="card-body ">
+
+        <div class="d-flex flex-nowrap row">
+          <div class="m-1 col-md-4 ">
+            <img class="card-img"
+              data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt=""
+              src="${receta.recipe.images.REGULAR.url}" data-holder-rendered="true"
+              style="height: 200px; width:100%; display: block;">
+          </div>
+          <div class="col-md-8 m-1 d-flex col">
+            <div>
+              <div class="d-flex  align-items-center mt-3 ">
+                <h2 class="card-title">${receta.recipe.label}</h2>
+              </div>
+              <p class="card-text" id="">&#9679;${health}</p>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="d-flex col-md-12 d-flex justify-content-between align-content-center row my-2 mx-auto ">
+          <div class="col-md-4 d-flex justify-content-center mx-auto row">
+            <small class="text-muted class=" "">comida tipica: ${receta.recipe.cuisineType}</small>
+            <div class="">
+              <h5>${receta.recipe.calories.toFixed(0)} Kcal</h5>
+          </div>
+          <button type="button" class="btn btn-primary btn-lg"><a href="${receta.recipe.url}" target="_blank" style="text-decoration:none; color:white">Ir al Sitio</a></button>
+        </div>
+          <div class="col-md-4">
+            <ul class="list-unstyled ">
+              <li class="d-flex justify-content-between "> <span>&#128308; Protein</span> <span>${receta.recipe.digest[0].total.toFixed(1)} g</span> </li>
+              <li class="d-flex justify-content-between "> <span>&#128994; Fat</span> <span>${receta.recipe.digest[1].total.toFixed(1)} g</span> </li>
+              <li class="d-flex justify-content-between "> <span>	&#128993; Carb</span> <span>${receta.recipe.digest[2].total.toFixed(1)} g</span> </li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <ul class="list-unstyled ">
+              <li class="d-flex justify-content-between "> <span>Cholesterol</span> <span>${receta.recipe.digest[3].total.toFixed(1)} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Sodium</span> <span>${receta.recipe.digest[4].total.toFixed(1)} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Calcium</span> <span>${receta.recipe.digest[5].total.toFixed(1)} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Magnesium</span> <span>${receta.recipe.digest[6].total.toFixed(1)} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Potassium</span> <span>${receta.recipe.digest[7].total.toFixed(1)} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Iron</span> <span>${receta.recipe.digest[8].total.toFixed(1)} mg</span> </li>
+            </ul>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>`;
+  }
+}
+
 //funciones
 function ver(mostrar) {
   let infoMostrar = "Mostrar los Platos guardados en el LocalStorage";
@@ -107,28 +219,28 @@ function ver(mostrar) {
       text: infoOrdenarProducto,
       className: "info",
       gravity: "top",
-      position: "right"
+      position: "right",
     }).showToast();
   } else if (mostrar == "infofiltrarPlato") {
     Toastify({
       text: infofiltrarPlato,
       className: "info",
       gravity: "top",
-      position: "right"
+      position: "right",
     }).showToast();
   } else if (mostrar == "infofiltrarPais") {
     Toastify({
       text: infofiltrarPais,
       className: "info",
       gravity: "top",
-      position: "right"
+      position: "right",
     }).showToast();
   } else if (mostrar == "inforesetear") {
     Toastify({
       text: inforesetear,
       className: "info",
       gravity: "top",
-      position: "right"
+      position: "right",
     }).showToast();
   }
 }
