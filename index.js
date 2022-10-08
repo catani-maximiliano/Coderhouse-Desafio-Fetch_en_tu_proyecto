@@ -10,7 +10,7 @@ const resetear = document.querySelector("#resetear");
 const elemento = document.querySelector("#tabla");
 const listaPlatos = document.getElementById("tabla");
 let nuevoPlato = [];
-let usuarioNuevo = [];
+
 const emailRegister = document.getElementById("emailRegister");
 const contraseñaRegistro = document.getElementById("contraseñaRegistro");
 const contraseñaRegistroCon = document.getElementById("contraseñaRegistroCon");
@@ -19,7 +19,7 @@ const regexEmail =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 let platoJson = []; //variable donde guardo el objeto traido desde json
-let usuarioJson = [];
+
 let tablaContent;
 let tablaContentPrecio;
 let tablaContentProducto;
@@ -36,7 +36,6 @@ let usuarioConectadoJson = JSON.parse(
 
 const emailSesion = document.getElementById("emailSesion").value;
 const contraseñaSesion = document.getElementById("contraseñaSesion").value;
-usuarioJson = JSON.parse(localStorage.getItem("usuario"));
 
 class comidas {
   constructor(nombre, ingredientes, pais, precio) {
@@ -112,24 +111,23 @@ marvel.render();*/
 async function apiRespuesta() {
   let app_id = "5d3a5e8f";
   let app_key = "61c7b7bd4ec183a6f7c871979335e3dd";
-  let buscadorReceta=document.getElementById("buscadorReceta").value;
+  let buscadorReceta = document.getElementById("buscadorReceta").value;
   let urlAPI = `https://api.edamam.com/api/recipes/v2?type=public&q=${buscadorReceta}&app_id=${app_id}&app_key=%20${app_key}`;
   let response = await fetch(urlAPI);
   let data = await response.json();
- console.log(data.hits);
+  console.log(data.hits);
 
- document.getElementById("contenedor").innerHTML ="";
+  document.getElementById("contenedor").innerHTML = "";
   for (const receta of data.hits) {
-    let health=[];
-    let l=receta.recipe.healthLabels.length;
-    let punto='&#9679';
+    let health = [];
+    let l = receta.recipe.healthLabels.length;
+    let punto = "&#9679";
 
-    for (let index = 0 ; index < l; index++) {
-      health.push(receta.recipe.healthLabels[index]+"  ");
+    for (let index = 0; index < l; index++) {
+      health.push(receta.recipe.healthLabels[index] + "  ");
     }
-   health= health.toString();
-   health= health.replace(/,/g, punto);
-
+    health = health.toString();
+    health = health.replace(/,/g, punto);
 
     document.getElementById("contenedor").innerHTML += `
     <div class="col-md-8 mx-auto my-1 rounded" id="recetas">
@@ -140,7 +138,9 @@ async function apiRespuesta() {
           <div class="m-1 col-md-4 ">
             <img class="card-img"
               data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt=""
-              src="${receta.recipe.images.REGULAR.url}" data-holder-rendered="true"
+              src="${
+                receta.recipe.images.REGULAR.url
+              }" data-holder-rendered="true"
               style="height: 200px; width:100%; display: block;">
           </div>
           <div class="col-md-8 m-1 d-flex col">
@@ -157,27 +157,49 @@ async function apiRespuesta() {
 
         <div class="d-flex col-md-12 d-flex justify-content-between align-content-center row my-2 mx-auto ">
           <div class="col-md-4 d-flex justify-content-center mx-auto row">
-            <small class="text-muted class=" "">comida tipica: ${receta.recipe.cuisineType}</small>
+            <small class="text-muted class=" "">comida tipica: ${
+              receta.recipe.cuisineType
+            }</small>
             <div class="">
               <h5>${receta.recipe.calories.toFixed(0)} Kcal</h5>
           </div>
-          <button type="button" class="btn btn-primary btn-lg"><a href="${receta.recipe.url}" target="_blank" style="text-decoration:none; color:white">Ir al Sitio</a></button>
+          <button type="button" class="btn btn-primary btn-lg"><a href="${
+            receta.recipe.url
+          }" target="_blank" style="text-decoration:none; color:white">Ir al Sitio</a></button>
         </div>
           <div class="col-md-4">
             <ul class="list-unstyled ">
-              <li class="d-flex justify-content-between "> <span>&#128308; Protein</span> <span>${receta.recipe.digest[0].total.toFixed(1)} g</span> </li>
-              <li class="d-flex justify-content-between "> <span>&#128994; Fat</span> <span>${receta.recipe.digest[1].total.toFixed(1)} g</span> </li>
-              <li class="d-flex justify-content-between "> <span>	&#128993; Carb</span> <span>${receta.recipe.digest[2].total.toFixed(1)} g</span> </li>
+              <li class="d-flex justify-content-between "> <span>&#128308; Protein</span> <span>${receta.recipe.digest[0].total.toFixed(
+                1
+              )} g</span> </li>
+              <li class="d-flex justify-content-between "> <span>&#128994; Fat</span> <span>${receta.recipe.digest[1].total.toFixed(
+                1
+              )} g</span> </li>
+              <li class="d-flex justify-content-between "> <span>	&#128993; Carb</span> <span>${receta.recipe.digest[2].total.toFixed(
+                1
+              )} g</span> </li>
             </ul>
           </div>
           <div class="col-md-4">
             <ul class="list-unstyled ">
-              <li class="d-flex justify-content-between "> <span>Cholesterol</span> <span>${receta.recipe.digest[3].total.toFixed(1)} mg</span> </li>
-              <li class="d-flex justify-content-between "> <span>Sodium</span> <span>${receta.recipe.digest[4].total.toFixed(1)} mg</span> </li>
-              <li class="d-flex justify-content-between "> <span>Calcium</span> <span>${receta.recipe.digest[5].total.toFixed(1)} mg</span> </li>
-              <li class="d-flex justify-content-between "> <span>Magnesium</span> <span>${receta.recipe.digest[6].total.toFixed(1)} mg</span> </li>
-              <li class="d-flex justify-content-between "> <span>Potassium</span> <span>${receta.recipe.digest[7].total.toFixed(1)} mg</span> </li>
-              <li class="d-flex justify-content-between "> <span>Iron</span> <span>${receta.recipe.digest[8].total.toFixed(1)} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Cholesterol</span> <span>${receta.recipe.digest[3].total.toFixed(
+                1
+              )} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Sodium</span> <span>${receta.recipe.digest[4].total.toFixed(
+                1
+              )} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Calcium</span> <span>${receta.recipe.digest[5].total.toFixed(
+                1
+              )} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Magnesium</span> <span>${receta.recipe.digest[6].total.toFixed(
+                1
+              )} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Potassium</span> <span>${receta.recipe.digest[7].total.toFixed(
+                1
+              )} mg</span> </li>
+              <li class="d-flex justify-content-between "> <span>Iron</span> <span>${receta.recipe.digest[8].total.toFixed(
+                1
+              )} mg</span> </li>
             </ul>
           </div>
         </div>
@@ -450,20 +472,28 @@ function reset() {
   }
 }
 
+let usuarioExistenteSesion = "";
+let usuarioExistenteRegistro = "";
+let usuarioJson = [];
+
 function Login() {
   if (usuarioConectadoJson === false) {
     //buscar si existe usuario y contraseña y pasar por variable para validarlo.
     //validacion de mail y contraseña dentro del localstorage.
 
-    for (var i = 0; i < usuarioJson.length; i++) {
+    for (let i = 0; i < usuarioJson.length; i++) {
       if (
-        usuarioJson[i].email == emailSesion &&
-        usuarioJson[i].contraseña == contraseñaSesion
-      ) {
-        return (usuarioExistente = usuarioJson[i].email);
+        usuarioJson[i].email === emailSesion &&
+        usuarioJson[i].contraseña === contraseñaSesion
+      ){console.log(usuarioJson);
+        return(usuarioExistenteSesion = usuarioJson[i].email)}
+      else{
+        Swal.fire("Usuario o contraseña incorrectas");
+        return;
       }
     }
-    if (emailSesion !== usuarioExistente) {
+    console.log(usuarioExistenteSesion);
+    if (emailSesion !== usuarioExistenteSesion) {
       Swal.fire("Usuario o contraseña incorrectas");
       return;
     } else {
@@ -491,18 +521,34 @@ function Login() {
     }
   }
 }
+
+let emailReg = document.getElementById("emailRegister").value;
+let contraseñaReg = document.getElementById("contraseñaRegistro").value;
+let contraseñaRegCon = document.getElementById("contraseñaRegistroCon").value;
+let usuarioNuevo = [];
+usuarioJson = JSON.parse(localStorage.getItem("usuario"));
+
 //la funcion para registrar usuarios mediante localstorage
 function Register() {
-  let emailReg = document.getElementById("emailRegister").value;
-  let contraseñaReg = document.getElementById("contraseñaRegistro").value;
-  let contraseñaRegCon = document.getElementById("contraseñaRegistroCon").value;
 
+  usuarioConectado = false;
+
+  emailReg = document.getElementById("emailRegister").value;
+  contraseñaReg = document.getElementById("contraseñaRegistro").value;
+  contraseñaRegCon = document.getElementById("contraseñaRegistroCon").value;
   //busca en el localStorage si existe el mail ingresado. intente con filter pero no pude hacer que sea igual un valor a la busqueda.
-  for (var i = 0; i < usuarioJson.length; i++) {
-    if (usuarioJson[i].email == emailReg)
-      Swal.fire("Este mail ya esta registrado!!!");
-    return (usuarioExistente = usuarioJson[i].email);
+  
+    for (var i = 0; i < usuarioJson.length; i++) {
+      if (usuarioJson[i].email == emailReg)
+
+      usuarioExistenteRegistro=usuarioJson[i].email;
+      console.log(usuarioExistente);
+    }
+  if(usuarioExistenteRegistro==emailReg){
+            Swal.fire("Este mail ya esta registrado!!!");
+            return;
   }
+
   //validaciones para el registro de usuario
   if (emailReg === "" || contraseñaReg === "" || contraseñaRegCon === "") {
     Swal.fire("los campos no pueden estar vacios");
@@ -520,7 +566,13 @@ function Register() {
     Swal.fire("la contraseña debe ser mayor a 6 digitos");
     return;
   } else {
-    usuarioNuevo.push(new usuario(emailReg, contraseñaReg));
+
+
+    usuarioConectado = false;
+    sessionStorage.setItem("usuarioConectado",JSON.stringify(usuarioConectado));
+    usuarioConectadoJson = JSON.parse(sessionStorage.getItem("usuarioConectado"));
+    let usuarioX={email:emailReg, contraseña:contraseñaReg };
+    usuarioNuevo.push(usuarioX);
     //guardado del usuario en el localStorage.
     localStorage.setItem("usuario", JSON.stringify(usuarioNuevo));
     //en usuarioJson guardo el objeto del localstorage y luego la variable usuarioJson la utilizo para el resto de funciones.
@@ -539,6 +591,7 @@ function Register() {
       document.getElementById("boton-cerrar-registro").click();
     }
     setTimeout(clickbutton, 1000);
+    return;
   }
 }
 

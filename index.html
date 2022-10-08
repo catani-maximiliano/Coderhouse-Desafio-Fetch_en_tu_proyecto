@@ -15,83 +15,61 @@
 
 <body class="bg-light">
   <main role="main">
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark col-md-12">
-
-      <div class="collapse navbar-collapse class="col-md-4"">
+  <!-- Botones login, registro, cerrar sesion-->
+    <nav class="navbar navbar-expand-lg navbar-warning bg-warning col-md-12">
+      <!-- botones  -->
+      <div class="collapse navbar-collapse col-md-4">
         <!-- Botones -->
         <ul class="navbar-nav ">
 
           <li class="nav-item">
-            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#Modal">Ingresar
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#Modal">Ingresar
               Plato</button>
           </li>
           <li class="nav-item">
-            <button type="button" id="mostrar" class="btn btn-dark" onmouseover="ver('infoMostrar')">Mostrar
+            <button type="button" id="mostrar" class="btn btn-warning" onmouseover="ver('infoMostrar')">Mostrar
               los
               Platos</button>
           </li>
           <li class="nav-item dropdown ">
             <a class="nav-link dropdown-toggle" id="dropdown05" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">Funciones</a>
-            <div class="dropdown-menu bg-dark  " aria-labelledby="dropdown05">
-              <button type="button" id="ordenarPrecio" class="btn btn-dark"
+            <div class="dropdown-menu bg-warning  " aria-labelledby="dropdown05">
+              <button type="button" id="ordenarPrecio" class="btn btn-warning"
                 onmouseover="ver('infoOrdenarPrecio')">Ordenar por
                 Precio</button>
-              <button type="button" id="ordenarProducto" class="btn btn-dark"
+              <button type="button" id="ordenarProducto" class="btn btn-warning"
                 onmouseover="ver('infoOrdenarProducto')">Ordenar
                 por Producto</button>
-              <button type="button" id="filtrarPlato" class="btn btn-dark"
+              <button type="button" id="filtrarPlato" class="btn btn-warning"
                 onmouseover="ver('infofiltrarPlato')">busqueda de
                 platos</button>
-              <button type="button" id="filtrarPais" class="btn btn-dark" onmouseover="ver('infofiltrarPais')">busqueda
+              <button type="button" id="filtrarPais" class="btn btn-warning" onmouseover="ver('infofiltrarPais')">busqueda
                 por
                 pais</button>
-              <button type="button" id="resetear" class="btn btn-dark nav-item"
+              <button type="button" id="resetear" class="btn btn-warning "
                 onmouseover="ver('inforesetear')">Limpieza de
                 Tabla</button>
             </div>
           </li>
         </ul>
-
       </div>
       <!-- Buscador de recetas -->
-      <div class="col-md-4 d-flex ">
-        <input class="form-control" type="text" id="buscadorReceta" placeholder="Ingrese una palabra clave">
+      <div class="col-md-5 d-flex ">
+        <label for="buscadorReceta" class="d-flex font-weight-bold"> Buscador de recetas</label>
+        <input class="form-control " type="text" id="buscadorReceta" placeholder="Ingrese una palabra clave">
         <button type="button" class="btn btn-success " onclick="apiRespuesta()">Buscar</button>
       </div>
       <!-- Botones login y registro-->
-      <div class="col-md-4 d-flex justify-content-end mx-3">
-        <button type="button" id="boton-ingresar" class="btn  btn-primary text-dark" data-bs-toggle="modal"
+      <div class="col-md-3 d-flex justify-content-end ">
+        <button type="button" id="boton-ingresar" class="btn btn-warning text-dark btn-outline-light text-black" data-bs-toggle="modal"
           data-bs-target="#modalIngreso">Ingreso</button>
-        <button type="button" id="boton-registrar" class="btn  btn-primary text-dark mx-1" data-bs-toggle="modal"
+        <button type="button" id="boton-registrar" class="btn btn-warning btn-outline-light text-black mx-1" data-bs-toggle="modal"
           data-bs-target="#modalRegistro">Registro</button>
         <button type="button" id="boton-cerrar-sesion" onclick="CerrarSesion()"
-          class="btn d-none  btn-primary text-dark">Cerrar Sesión</button>
+          class="btn d-none  btn-warning text-dark">Cerrar Sesión</button>
       </div>
     </nav>
-
-
-
-
-
-
-
-
-    <div id="btn-group" class="btn-group btn-group-sm my-3" role="group">
-      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#Modal">Ingresar
-        Plato</button>
-      <button type="button" id="mostrar" class="btn btn-dark" onmouseover="ver('infoMostrar')">Mostrar
-        los
-        Platos</button>
-
-
-    </div>
-
-    </div>
-    </nav>
-
-
 
     <h1 class="text-center m-4 text-decoration-underline">Platos del restaurante</h1>
 
@@ -109,10 +87,7 @@
                       <div class="col-12">
                         <div class="card" style="border-radius: 1rem;">
                           <div class="row g-0">
-                            <div class="col-md-4 d-none d-md-block">
-                              <img src="./comidas-mundo.jpg" alt="login form" class="img-fluid"
-                                style="border-top-left-radius: 1rem; border-bottom-left-radius: 1rem; height: 100%; width: 300px;" />
-                            </div>
+
                             <div class="col-md-8 d-flex align-items-center">
                               <div class="card-body py-2 px-4 p-md-5">
 
@@ -161,10 +136,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Botones login, registro, cerrar sesion-->
-
-
 
     <!-- Modal Login-->
     <div class="modal modal-signin " tabindex="-1" role="dialog" id="modalIngreso">
@@ -230,7 +201,7 @@
     <div class="d-flex row w-75 m-auto">
 
       <!-- Tabla -->
-      <table id="tabla" class="table table-bordered table-striped table-hover">
+      <table id="tabla" class="table table-bordered table-dark table-striped table-hover">
         <tr>
           <th>Plato</th>
           <th>ingredientes</th>
@@ -270,7 +241,8 @@
     </div>
     </div>
   </main>
-  <script src="./index.js"></script>
+  <script src="index.js"></script>
+
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>
