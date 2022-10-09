@@ -571,6 +571,9 @@ function Register() {
   contraseñaReg = document.getElementById("contraseñaRegistro").value;
   contraseñaRegCon = document.getElementById("contraseñaRegistroCon").value;
   //busca en el localStorage si existe el mail ingresado. intente con filter pero no pude hacer que sea igual un valor a la busqueda.
+  if(usuarioJson==null){
+    usuarioJson=[{"email":"mm", "contraseña":"asdsad"}]
+  }
   
     for (let i = 0; i < usuarioJson.length; i++) {
       if (usuarioJson[i].email == emailReg)
@@ -578,6 +581,7 @@ function Register() {
       usuarioExistenteRegistro=usuarioJson[i].email;
       console.log(usuarioExistenteRegistro);
     }
+
   if(usuarioExistenteRegistro==emailReg){
             Swal.fire("Este mail ya esta registrado!!!");
             return;
